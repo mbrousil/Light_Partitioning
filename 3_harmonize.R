@@ -192,10 +192,10 @@ p3_targets_list <- list(
              packages = c("tidyverse", "lubridate", "feather")),
   
   tar_target(simultaneous_data_strict,
-             find_simultaneous(chla_path = harmonized_chla_strict,
-                               doc_path = harmonized_doc_strict,
-                               sdd_path = harmonized_sdd_strict,
-                               tss_path = harmonized_tss_strict,
+             find_simultaneous(chla_path = harmonized_chla_strict$harmonized_chla_path,
+                               doc_path = harmonized_doc_strict$harmonized_doc_path,
+                               sdd_path = harmonized_sdd_strict$harmonized_sdd_path,
+                               tss_path = harmonized_tss_strict$harmonized_tss_path,
                                wqp_metadata = p1_wqp_inventory_aoi),
              packages = c("tidyverse", "lubridate", "feather")),
   

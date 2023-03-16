@@ -30,7 +30,7 @@ p4_targets_list <- list(
                download.file('https://figshare.com/ndownloader/files/24720434',
                              mode = 'wb',
                              destfile = 'data/in/inv.feather')
-
+               
                "data/in/inv.feather"
              }),
   
@@ -47,7 +47,7 @@ p4_targets_list <- list(
                download.file('https://figshare.com/ndownloader/files/24720437',
                              mode = 'wb',
                              destfile = 'data/in/unq_site.feather')
-
+               
                "data/in/unq_site.feather"
              }),
   
@@ -270,7 +270,12 @@ p4_targets_list <- list(
   tar_render(model_report,
              "4_analysis/src/model_report.Rmd",
              packages = c("tidyverse", "lubridate", "feather", "ggpmisc", "Metrics",
-                          "broom", "ggtern", "kableExtra"))
+                          "broom", "ggtern", "kableExtra")),
+  
+  tar_render(updated_model_report,
+             "4_analysis/src/model_report_updated.Rmd",
+             packages = c("tidyverse", "sf", "broom", "Metrics", "kableExtra"))
+  
   
   
 )
