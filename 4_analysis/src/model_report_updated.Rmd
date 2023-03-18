@@ -8,6 +8,9 @@ date: "`r Sys.Date()`"
 ```{r}
 tar_load(simultaneous_data_strict)
 tar_load(ecoregion)
+
+tar_load(simultaneous_data)
+tar_load(simul)
 ```
 
 ### L1 Ecoregions
@@ -29,7 +32,10 @@ simul_sf <- simultaneous_data_strict %>%
 ggplot() +
   geom_sf(data = ecoregion) +
   geom_sf(data = simul_sf)
+```
 
+Join by ecoregion and check
+```{r}
 simul_region <- st_join(x = simul_sf,
                         y = ecoregion,
                         left = TRUE)
@@ -45,9 +51,9 @@ ggplot() +
 ```
 
 ### Modeling
-```{r}
 
-# Original modeling -------------------------------------------------------
+#### Original modeling
+```{r}
 
 nap <- expand_grid(simultaneous_data_strict, chl_ratio = 234) %>%
   mutate(power = ifelse(chl_ratio == 234, 0.57, 1),
@@ -64,9 +70,61 @@ nap_model <- lm(kd ~ tss_dead + doc + chla, data = nap_est)
 nap_resid <- nap_est %>%
   mutate(residuals = nap_model$residuals,
          pred = nap_model$fitted.values)
+```
+
+#### Modeling by random subsets
+```{r}
+# Run previous model 25x with 1000 random rows of data
+model_metrics_rand <- map_df(.x = 1:25,
+                             .f = ~ {
+                               # New dataset from random 1k samples
+                               new_df <- sample_n(size = 1000,
+                                                  tbl = nap_est,
+                                                  replace = FALSE) 
+                               # Linear model from it
+                               new_model <- lm(kd ~ tss_dead + doc + chla, data = new_df)
+                               # Add resids and predictions to dataset
+                               new_resids <- new_df %>%
+                                 mutate(residuals = new_model$residuals,
+                                        pred = new_model$residuals)
+                               
+                               # RMSE
+                               rmse <- round(rmse(new_resids$kd, new_resids$pred), 2)
+                               # Global model info
+                               model_summary <- glance(new_model)
+                               
+                               # Get coefficients from the model and format
+                               model_coefs <- as.data.frame(coef(new_model)) %>%
+                                 rownames_to_column() %>%
+                                 rename(coef = 2) %>%
+                                 mutate(names = janitor::make_clean_names(rowname) %>%
+                                          paste0(., "_coef")) %>%
+                                 select(-rowname) %>%
+                                 pivot_wider(names_from = "names", values_from = "coef")
+                               
+                               # Combine output metrics
+                               tibble(model_run = .x,
+                                      rmse = rmse,
+                                      adj_rsq = model_summary$adj.r.squared,
+                                      p_value = model_summary$p.value) %>%
+                                 bind_cols(., model_coefs)
+                             })
 
 
-# Model by ecoregion ------------------------------------------------------
+model_metrics_rand %>%
+  kable() %>%
+  kable_paper()
+
+# model_metrics_rand %>%
+#   pivot_longer(names_to = "metric", values_to = "value", rmse:chla_coef) %>%
+#   ggplot() +
+#   geom_histogram(aes(value)) +
+#   facet_wrap(vars(metric), scales = "free") +
+#   theme_bw()
+```
+
+#### Model by ecoregion
+```{r}
 
 nap_est_eco <- simul_region %>%
   as_tibble() %>%
@@ -121,3 +179,127 @@ model_metrics_eco %>%
   kable() %>%
   kable_paper()
 ```
+
+
+#### Model by water body type
+```{r}
+
+nap_est_type <- nap_est %>%
+  split(f = .$type)
+
+model_type <- map(.x = nap_est_type,
+                  .f = ~ lm(kd ~ tss_dead + doc + chla, data = .x))
+
+nap_resid_type <- map2(.x = nap_est_type,
+                       .y = model_type,
+                       .f = ~ .x %>%
+                         mutate(residuals = .y$residuals,
+                                pred = .y$fitted.values))
+
+model_metrics_type <- pmap_df(.l = list(nap_resid = nap_resid_type,
+                                        name = names(nap_resid_type),
+                                        model = model_type),
+                              .f = function(nap_resid, name, model){
+                                # Which dataset used for the model?
+                                dataset <- name
+                                # RMSE
+                                rmse <- round(rmse(nap_resid$kd, nap_resid$pred), 2)
+                                # Global model info
+                                model_summary <- glance(model)
+                                
+                                # Get coefficients from the model and format
+                                model_coefs <- as.data.frame(coef(model)) %>%
+                                  rownames_to_column() %>%
+                                  rename(coef = 2) %>%
+                                  mutate(names = janitor::make_clean_names(rowname) %>%
+                                           paste0(., "_coef")) %>%
+                                  select(-rowname) %>%
+                                  pivot_wider(names_from = "names", values_from = "coef")
+                                
+                                tibble(dataset = dataset,
+                                       n_samples = model_summary$nobs,
+                                       rmse = rmse,
+                                       adj_rsq = model_summary$adj.r.squared,
+                                       p_value = model_summary$p.value) %>%
+                                  bind_cols(., model_coefs)
+                              })
+
+model_metrics_type %>%
+  kable() %>%
+  kable_paper()
+```
+
+#### Modeling by strictness
+```{r}
+
+nap_strictness <- map(.x = list(mr_simul = simul %>%
+                                  rename(chla = chl_a),
+                                recreate_simul = simultaneous_data,
+                                strict_simul = simultaneous_data_strict),
+                      .f = ~ expand_grid(.x, chl_ratio = 234) %>%
+                        mutate(power = ifelse(chl_ratio == 234, 0.57, 1),
+                               chla_biomass = exp(log(chl_ratio / 1000) + log(chla) * power),
+                               tss_dead = tss - chla_biomass))
+
+nap_est_strictness <- map(.x = nap_strictness,
+                          .f = ~ .x %>%
+                            filter(tss_dead > 0.001) %>%
+                            mutate(secchi = ifelse(secchi < 0.01, 0.01, secchi),
+                                   kd = (1 / secchi)))
+
+nap_model_strictness <- map(.x = nap_est_strictness,
+                            .f = ~ lm(kd ~ tss_dead + doc + chla, data = .x))
+
+nap_resid_strictness <- map2(.x = nap_est_strictness,
+                             .y = nap_model_strictness,
+                             .f = ~ .x %>%
+                               mutate(residuals = .y$residuals,
+                                      pred = .y$fitted.values))
+
+model_metrics_strictness <- pmap_df(.l = list(nap_resid = nap_resid_strictness,
+                                              name = names(nap_resid_strictness),
+                                              model = nap_model_strictness),
+                                    .f = function(nap_resid, name, model){
+                                      # Which dataset used for the model?
+                                      dataset <- name
+                                      # RMSE
+                                      rmse <- round(rmse(nap_resid$kd, nap_resid$pred), 2)
+                                      # Global model info
+                                      model_summary <- glance(model)
+                                      
+                                      # Get coefficients from the model and format
+                                      model_coefs <- as.data.frame(coef(model)) %>%
+                                        rownames_to_column() %>%
+                                        rename(coef = 2) %>%
+                                        mutate(names = janitor::make_clean_names(rowname) %>%
+                                                 paste0(., "_coef")) %>%
+                                        select(-rowname) %>%
+                                        pivot_wider(names_from = "names", values_from = "coef")
+                                      
+                                      tibble(dataset = dataset,
+                                             n_samples = model_summary$nobs,
+                                             rmse = rmse,
+                                             adj_rsq = model_summary$adj.r.squared,
+                                             p_value = model_summary$p.value) %>%
+                                        bind_cols(., model_coefs)
+                                    })
+
+model_metrics_strictness %>%
+  kable() %>%
+  kable_paper()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
