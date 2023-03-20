@@ -1,6 +1,8 @@
 ---
 title: "Light partitioning model update"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
 date: "`r Sys.Date()`"
 ---
 
@@ -13,6 +15,8 @@ tar_load(simultaneous_data)
 tar_load(simul)
 ```
 
+<br> 
+
 ### L1 Ecoregions
 ```{r}
 ecoregion %>%
@@ -21,7 +25,10 @@ ecoregion %>%
   arrange(NA_L1CODE)
 ```
 
+<br>
+
 Prepare data for ecoregion join
+
 ```{r}
 simul_sf <- simultaneous_data_strict %>%
   ungroup() %>%
@@ -34,7 +41,11 @@ ggplot() +
   geom_sf(data = simul_sf)
 ```
 
+
+<br>
+
 Join by ecoregion and check
+
 ```{r}
 simul_region <- st_join(x = simul_sf,
                         y = ecoregion,
@@ -50,9 +61,14 @@ ggplot() +
   theme_bw()
 ```
 
+
+<br>
+
 ### Modeling
 
 #### Original modeling
+
+
 ```{r}
 
 nap <- expand_grid(simultaneous_data_strict, chl_ratio = 234) %>%
@@ -65,15 +81,32 @@ nap_est <- nap %>%
   mutate(secchi = ifelse(secchi < 0.01, 0.01, secchi),
          kd = (1 / secchi))
 
-nap_model <- lm(kd ~ tss_dead + doc + chla, data = nap_est)
+nap_model <- lm(kd ~ 0 + tss_dead + doc + chla, data = nap_est)
 
 nap_resid <- nap_est %>%
   mutate(residuals = nap_model$residuals,
          pred = nap_model$fitted.values)
+
+tidy(nap_model) %>%
+  kable() %>%
+  kable_paper()
+
+tidy(nap_model) %>%
+  pivot_longer(names_to = "metric", values_to = "value",
+               c(estimate, std.error, statistic, p.value)) %>%
+  ggplot() +
+  geom_point(aes(x = term, y = value)) +
+  facet_wrap(vars(metric), scales = "free") +
+  theme_bw()
 ```
 
+
+<br>
+
 #### Modeling by random subsets
-```{r}
+
+
+```{r fig.width=8, fig.width=10}
 # Run previous model 25x with 1000 random rows of data
 model_metrics_rand <- map_df(.x = 1:25,
                              .f = ~ {
@@ -82,7 +115,7 @@ model_metrics_rand <- map_df(.x = 1:25,
                                                   tbl = nap_est,
                                                   replace = FALSE) 
                                # Linear model from it
-                               new_model <- lm(kd ~ tss_dead + doc + chla, data = new_df)
+                               new_model <- lm(kd ~ 0 + tss_dead + doc + chla, data = new_df)
                                # Add resids and predictions to dataset
                                new_resids <- new_df %>%
                                  mutate(residuals = new_model$residuals,
@@ -90,6 +123,10 @@ model_metrics_rand <- map_df(.x = 1:25,
                                
                                # RMSE
                                rmse <- round(rmse(new_resids$kd, new_resids$pred), 2)
+                               # MDAE
+                               mdae <- round(mdae(new_resids$kd, new_resids$pred), 2)
+                               # R2
+                               r2 <- round(cor(new_resids$kd, new_resids$pred)^2, 2)
                                # Global model info
                                model_summary <- glance(new_model)
                                
@@ -105,6 +142,8 @@ model_metrics_rand <- map_df(.x = 1:25,
                                # Combine output metrics
                                tibble(model_run = .x,
                                       rmse = rmse,
+                                      mdae = mdae,
+                                      r2_manual = r2,
                                       adj_rsq = model_summary$adj.r.squared,
                                       p_value = model_summary$p.value) %>%
                                  bind_cols(., model_coefs)
@@ -115,16 +154,23 @@ model_metrics_rand %>%
   kable() %>%
   kable_paper()
 
-# model_metrics_rand %>%
-#   pivot_longer(names_to = "metric", values_to = "value", rmse:chla_coef) %>%
-#   ggplot() +
-#   geom_histogram(aes(value)) +
-#   facet_wrap(vars(metric), scales = "free") +
-#   theme_bw()
+model_metrics_rand %>%
+  pivot_longer(names_to = "metric", values_to = "value", rmse:chla_coef) %>%
+  ggplot() +
+  geom_jitter(aes(x = 0, y = value), alpha = 0.3) +
+  geom_boxplot(aes(y = value), fill = NA) +
+  facet_wrap(vars(metric), scales = "free") +
+  xlab(NULL) +
+  theme_bw()
 ```
 
+
+<br>
+
 #### Model by ecoregion
-```{r}
+
+
+```{r fig.width=8, fig.height=12}
 
 nap_est_eco <- simul_region %>%
   as_tibble() %>%
@@ -139,7 +185,7 @@ nap_est_eco <- simul_region %>%
 
 
 model_eco <- map(.x = nap_est_eco,
-                 .f = ~ lm(kd ~ tss_dead + doc + chla, data = .x))
+                 .f = ~ lm(kd ~ 0 + tss_dead + doc + chla, data = .x))
 
 nap_resid_eco <- map2(.x = nap_est_eco,
                       .y = model_eco,
@@ -155,6 +201,10 @@ model_metrics_eco <- pmap_df(.l = list(nap_resid = nap_resid_eco,
                                dataset <- name
                                # RMSE
                                rmse <- round(rmse(nap_resid$kd, nap_resid$pred), 2)
+                               # MDAE
+                               mdae <- round(mdae(nap_resid$kd, nap_resid$pred), 2)
+                               # R2
+                               r2 <- round(cor(nap_resid$kd, nap_resid$pred)^2, 2)
                                # Global model info
                                model_summary <- glance(model)
                                
@@ -170,6 +220,8 @@ model_metrics_eco <- pmap_df(.l = list(nap_resid = nap_resid_eco,
                                tibble(dataset = dataset,
                                       n_samples = model_summary$nobs,
                                       rmse = rmse,
+                                      mdae = mdae,
+                                      r2_manual = r2,
                                       adj_rsq = model_summary$adj.r.squared,
                                       p_value = model_summary$p.value) %>%
                                  bind_cols(., model_coefs)
@@ -178,17 +230,32 @@ model_metrics_eco <- pmap_df(.l = list(nap_resid = nap_resid_eco,
 model_metrics_eco %>%
   kable() %>%
   kable_paper()
+
+model_metrics_eco %>%
+  rename(ecoregion = dataset) %>%
+  pivot_longer(names_to = "measure", values_to = "value",
+               n_samples:chla_coef) %>%
+  # filter(measure != "n_samples") %>%
+  ggplot() +
+  geom_point(aes(x = ecoregion, y = value)) +
+  facet_wrap(vars(measure), scales = "free") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 
+<br>
+
 #### Model by water body type
-```{r}
+
+
+```{r fig.height=12, fig.width=8}
 
 nap_est_type <- nap_est %>%
   split(f = .$type)
 
 model_type <- map(.x = nap_est_type,
-                  .f = ~ lm(kd ~ tss_dead + doc + chla, data = .x))
+                  .f = ~ lm(kd ~ 0 + tss_dead + doc + chla, data = .x))
 
 nap_resid_type <- map2(.x = nap_est_type,
                        .y = model_type,
@@ -204,6 +271,10 @@ model_metrics_type <- pmap_df(.l = list(nap_resid = nap_resid_type,
                                 dataset <- name
                                 # RMSE
                                 rmse <- round(rmse(nap_resid$kd, nap_resid$pred), 2)
+                                # MDAE
+                                mdae <- round(mdae(nap_resid$kd, nap_resid$pred), 2)
+                                # R2
+                                r2 <- round(cor(nap_resid$kd, nap_resid$pred)^2, 2)
                                 # Global model info
                                 model_summary <- glance(model)
                                 
@@ -227,10 +298,25 @@ model_metrics_type <- pmap_df(.l = list(nap_resid = nap_resid_type,
 model_metrics_type %>%
   kable() %>%
   kable_paper()
+
+model_metrics_type %>%
+  rename(type = dataset) %>%
+  pivot_longer(names_to = "measure", values_to = "value", n_samples:chla_coef) %>%
+  # filter(measure != "n_samples") %>%
+  ggplot() +
+  geom_point(aes(x = type, y = value)) +
+  facet_wrap(vars(measure), scales = "free") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
+
+
 #### Modeling by strictness
-```{r}
+
+
+```{r fig.height=8, fig.width=6}
 
 nap_strictness <- map(.x = list(mr_simul = simul %>%
                                   rename(chla = chl_a),
@@ -248,7 +334,7 @@ nap_est_strictness <- map(.x = nap_strictness,
                                    kd = (1 / secchi)))
 
 nap_model_strictness <- map(.x = nap_est_strictness,
-                            .f = ~ lm(kd ~ tss_dead + doc + chla, data = .x))
+                            .f = ~ lm(kd ~ 0 + tss_dead + doc + chla, data = .x))
 
 nap_resid_strictness <- map2(.x = nap_est_strictness,
                              .y = nap_model_strictness,
@@ -264,6 +350,10 @@ model_metrics_strictness <- pmap_df(.l = list(nap_resid = nap_resid_strictness,
                                       dataset <- name
                                       # RMSE
                                       rmse <- round(rmse(nap_resid$kd, nap_resid$pred), 2)
+                                      # MDAE
+                                      mdae <- round(mdae(nap_resid$kd, nap_resid$pred), 2)
+                                      # R2
+                                      r2 <- round(cor(nap_resid$kd, nap_resid$pred)^2, 2)
                                       # Global model info
                                       model_summary <- glance(model)
                                       
@@ -279,6 +369,8 @@ model_metrics_strictness <- pmap_df(.l = list(nap_resid = nap_resid_strictness,
                                       tibble(dataset = dataset,
                                              n_samples = model_summary$nobs,
                                              rmse = rmse,
+                                             mdae = mdae,
+                                             r2_manual = r2,
                                              adj_rsq = model_summary$adj.r.squared,
                                              p_value = model_summary$p.value) %>%
                                         bind_cols(., model_coefs)
@@ -287,18 +379,15 @@ model_metrics_strictness <- pmap_df(.l = list(nap_resid = nap_resid_strictness,
 model_metrics_strictness %>%
   kable() %>%
   kable_paper()
+
+model_metrics_strictness %>%
+  pivot_longer(names_to = "measure", values_to = "value", n_samples:chla_coef) %>%
+  ggplot() +
+  geom_point(aes(x = dataset, y = value)) +
+  facet_wrap(vars(measure), scales = "free") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-
-
-
-
-
-
-
-
-
-
-
 
 
 
