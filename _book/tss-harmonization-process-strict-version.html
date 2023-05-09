@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2023-04-02" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="initial-dataset-4" class="section level3 hasAnchor" number="7.0.1">
 <h3><span class="header-section-number">7.0.1</span> 0. Initial dataset<a href="tss-harmonization-process-strict-version.html#initial-dataset-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>After the preharmonization process the tss-only WQP dataset contains
-3.23 million rows.</p>
+4.31 million rows.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -233,7 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">7.0.2</span> 1. Filter for water media<a href="tss-harmonization-process-strict-version.html#filter-for-water-media-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The first step in TSS harmonization is to ensure that the media type for
 the data is <code>"water"</code> or <code>"Water"</code>. This should just be a precautionary
-step: 0 rows are removed. The final row count after this is 3.23
+step: 0 rows are removed. The final row count after this is 4.31
 million.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
 <p><br></p>
@@ -249,7 +249,7 @@ dropped record includes (but is not limited to): <code>"fail"</code>, <code>"sus
 <code>"error"</code>, <code>"beyond accept"</code>, <code>"interference"</code>, <code>"questionable"</code>,
 <code>"problem"</code>, <code>"violation"</code>, <code>"rejected"</code>, <code>"no data"</code>. Specific target
 text varies by column.</p>
-<p>151.01 thousand rows are removed and 3.08 million rows remain.</p>
+<p>165.95 thousand rows are removed and 4.14 million rows remain.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -269,7 +269,7 @@ column we use that number instead.</p>
 <p>We then use a random number between 0 and <code>0.5 * MDL</code> as the record’s
 value moving forward.</p>
 <p>This should not result in a change in rows but we still check: 0 rows
-are removed. The final row count after this is 3.08 million.</p>
+are removed. The final row count after this is 4.14 million.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -287,7 +287,7 @@ ignoring case: <code>"result approx|RESULT IS APPROX|value approx"</code></li>
 </ol>
 <p>We then use the approximate value as the record’s value moving forward.</p>
 <p>This should not result in a change in rows but we still check: 0 rows
-are removed. The final row count after this is 3.08 million.</p>
+are removed. The final row count after this is 4.14 million.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -307,7 +307,7 @@ approximate cleaning</li>
 <p>We then use the “greater than” value (without <code>&gt;</code>) as the record’s value
 moving forward.</p>
 <p>This should not result in a change in rows but we still check: 0 rows
-are removed. The final row count after this is 3.08 million.</p>
+are removed. The final row count after this is 4.14 million.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -436,7 +436,7 @@ g/l
 </tbody>
 </table>
 <p>We also limit values to less than 1000 mg/L to ensure realistic data.
-133.68 thousand rows are removed. The final row count after this is 2.95
+346.36 thousand rows are removed. The final row count after this is 3.8
 million.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
 <p><br></p>
@@ -447,7 +447,7 @@ million.</p>
 then filter out methods that may have been erroneously added, were
 unclear, or which don’t meet our needs. Methods that were grouped as
 <code>"Ambiguous"</code> or <code>"Nonsensical"</code> are dropped.</p>
-<p>This process drops 1508.86 million rows leaving 1.44 million remaining.</p>
+<p>This process drops 2327.44 million rows leaving 1.47 million remaining.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-19-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -457,7 +457,7 @@ unclear, or which don’t meet our needs. Methods that were grouped as
 <code>ResultSampleFractionText</code> column. We <strong>drop</strong> records with the
 following values in this column: <code>"Fixed</code>“, <code>"Volatile"</code>, <code>"Dissolved"</code>,
 or <code>"Acid Soluble"</code>.</p>
-<p>This process drops 0.15 thousand rows leaving 1.44 million remaining in
+<p>This process drops 0.16 thousand rows leaving 1.47 million remaining in
 the final harmonized TSS dataset.</p>
 <p><img src="chapters/06_tss_harmonization_files/figure-gfm/unnamed-chunk-21-1.png" /><!-- --></p>
 

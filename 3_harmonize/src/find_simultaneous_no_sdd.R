@@ -1,13 +1,12 @@
 
-find_simultaneous <- function(chla_path, doc_path, sdd_path, tss_path,
-                              wqp_metadata, middle_only = FALSE){
+find_simultaneous_no_sdd <- function(chla_path, doc_path, tss_path,
+                                     wqp_metadata, middle_only = FALSE){
   
   # Load data ---------------------------------------------------------------
   
   # Read in the exported harmonized datasets
   chla <- read_feather(chla_path)
   doc <- read_feather(doc_path)
-  sdd <- read_feather(sdd_path)
   tss <- read_feather(tss_path)
   
   
@@ -29,12 +28,6 @@ find_simultaneous <- function(chla_path, doc_path, sdd_path, tss_path,
       group_by(SiteID, date, lon, lat, datum) %>%
       summarize(mean_doc = mean(harmonized_value))
     
-    sdd_agg <- sdd %>%
-      filter(quantile(harmonized_value, 0.999) >= harmonized_value,
-             quantile(harmonized_value, 0.001) <= harmonized_value) %>%
-      group_by(SiteID, date, lon, lat, datum) %>%
-      summarize(mean_sdd = mean(harmonized_value))
-    
     tss_agg <- tss %>%
       filter(quantile(harmonized_value, 0.999) >= harmonized_value,
              quantile(harmonized_value, 0.001) <= harmonized_value) %>%
@@ -52,10 +45,6 @@ find_simultaneous <- function(chla_path, doc_path, sdd_path, tss_path,
       group_by(SiteID, date, lon, lat, datum) %>%
       summarize(mean_doc = mean(harmonized_value))
     
-    sdd_agg <- sdd %>%
-      group_by(SiteID, date, lon, lat, datum) %>%
-      summarize(mean_sdd = mean(harmonized_value))
-    
     tss_agg <- tss %>%
       group_by(SiteID, date, lon, lat, datum) %>%
       summarize(mean_tss = mean(harmonized_value))
@@ -65,7 +54,7 @@ find_simultaneous <- function(chla_path, doc_path, sdd_path, tss_path,
   
   # Determine simultaneous points -------------------------------------------
   
-  simultaneous <- reduce(.x = list(chla_agg, doc_agg, sdd_agg, tss_agg),
+  simultaneous <- reduce(.x = list(chla_agg, doc_agg, tss_agg),
                          .f = inner_join,
                          by = c('SiteID', 'date', 'lon', 'lat', 'datum'))
   
@@ -84,7 +73,7 @@ find_simultaneous <- function(chla_path, doc_path, sdd_path, tss_path,
               by = c("SiteID" = "MonitoringLocationIdentifier",
                      "lat", "lon")) %>%
     select(SiteID, type, date, lat, lon, chla = mean_chla, doc = mean_doc,
-           secchi = mean_sdd, tss = mean_tss) %>%
+           tss = mean_tss) %>%
     distinct()
   
   

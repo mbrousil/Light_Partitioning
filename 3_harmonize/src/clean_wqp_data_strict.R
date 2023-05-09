@@ -96,6 +96,9 @@ clean_wqp_data_strict <- function(wqp_data,
     order = 1
   )
   
+  rm(wqp_data)
+  gc()
+  
   # Remove records flagged as having missing results
   wqp_data_no_missing <- wqp_data_no_dup %>%
     filter(!flag_missing_result)
@@ -112,6 +115,9 @@ clean_wqp_data_strict <- function(wqp_data,
     n_rows = nrow(wqp_data_no_missing),
     order = 2
   )
+  
+  rm(wqp_data_no_dup)
+  gc()
   
   # Remove records that don't meet needs for status
   wqp_data_pass_status <- wqp_data_no_missing %>%
@@ -134,6 +140,9 @@ clean_wqp_data_strict <- function(wqp_data,
     order = 3
   )
   
+  rm(wqp_data_no_missing)
+  gc()
+  
   # Remove records that don't meet needs for type
   wqp_data_pass_media <- wqp_data_pass_status %>%
     filter(ActivityMediaSubdivisionName %in% c('Surface Water', 'Water', 'Estuary') |
@@ -151,6 +160,9 @@ clean_wqp_data_strict <- function(wqp_data,
     n_rows = nrow(wqp_data_pass_media),
     order = 4
   )
+  
+  rm(wqp_data_pass_status)
+  gc()
   
   # Remove white space and rename with short names before export
   wqp_data_clean <- wqp_data_pass_media %>%
@@ -183,6 +195,9 @@ clean_wqp_data_strict <- function(wqp_data,
     n_rows = nrow(wqp_data_clean),
     order = 5
   )
+  
+  rm(wqp_data_pass_media)
+  gc()
   
   # Record of all steps where rows were dropped, why, and how many
   compiled_dropped <- bind_rows(starting_data, dropped_duplicates, dropped_missing,

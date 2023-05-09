@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2023-04-02" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -229,8 +229,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-2"><a href="light-partitioning-modeling-report.html#cb6-2" aria-hidden="true" tabindex="-1"></a>simul <span class="ot">&lt;-</span> params<span class="sc">$</span>simul</span>
 <span id="cb6-3"><a href="light-partitioning-modeling-report.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Our attempt at recreating MR&#39;s data</span></span>
 <span id="cb6-4"><a href="light-partitioning-modeling-report.html#cb6-4" aria-hidden="true" tabindex="-1"></a>simultaneous_data <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data</span>
-<span id="cb6-5"><a href="light-partitioning-modeling-report.html#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A stricter version</span></span>
-<span id="cb6-6"><a href="light-partitioning-modeling-report.html#cb6-6" aria-hidden="true" tabindex="-1"></a>simultaneous_data_strict <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data_strict</span></code></pre></div>
+<span id="cb6-5"><a href="light-partitioning-modeling-report.html#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Our attempt at recreating MR&#39;s data - no secchi</span></span>
+<span id="cb6-6"><a href="light-partitioning-modeling-report.html#cb6-6" aria-hidden="true" tabindex="-1"></a>simultaneous_data_no_sdd <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data_no_sdd</span>
+<span id="cb6-7"><a href="light-partitioning-modeling-report.html#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A stricter version</span></span>
+<span id="cb6-8"><a href="light-partitioning-modeling-report.html#cb6-8" aria-hidden="true" tabindex="-1"></a>simultaneous_data_strict <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data_strict</span>
+<span id="cb6-9"><a href="light-partitioning-modeling-report.html#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Strict version without secchi</span></span>
+<span id="cb6-10"><a href="light-partitioning-modeling-report.html#cb6-10" aria-hidden="true" tabindex="-1"></a>simultaneous_data_strict_no_sdd <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data_strict_no_sdd</span>
+<span id="cb6-11"><a href="light-partitioning-modeling-report.html#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Our attempt at recreating MR&#39;s data - middle 96% only</span></span>
+<span id="cb6-12"><a href="light-partitioning-modeling-report.html#cb6-12" aria-hidden="true" tabindex="-1"></a>simultaneous_data_middle <span class="ot">&lt;-</span> params<span class="sc">$</span>simultaneous_data_middle</span></code></pre></div>
 </details>
 </div>
 <div id="overview-of-simultaneous-records" class="section level3 hasAnchor" number="8.0.1">
@@ -240,8 +246,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <strong>original</strong> simultaneous Light Partitioning dataset based on
 AquaSat downloads and MR’s scripts has 100,853 records. <strong>Our attempt</strong>
 at achieving a similar number of rows using the current version of the
-WQP harmonization workflow contains 55,675 records. A <strong>stricter</strong>
-version of our dataset contains 25,588 records.</p>
+WQP harmonization workflow contains 56,653 records. A <strong>stricter</strong>
+version of our dataset contains 26,141 records.</p>
 <p>Most decisions regarding harmonization choices and filtering for the two
 more current datasets can be found in
 <code>3_harmonize/src/clean_wqp_data.R</code>,
@@ -312,8 +318,14 @@ dataset but hit a wall.</p>
 <p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
 <p><strong>Our dataset</strong>:</p>
 <p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
-<p><strong>Our strict dataset</strong>:</p>
+<p><strong>Our dataset, no secchi</strong>:</p>
 <p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><strong>Our dataset, no 0.001 or 0.999</strong>:</p>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><strong>Our strict dataset</strong>:</p>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><strong>Our strict dataset, no secchi</strong>:</p>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
 <strong>Comparison table</strong>:
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -341,10 +353,38 @@ chla
 Current dataset
 </td>
 <td style="text-align:right;">
-22.38
+22.20
 </td>
 <td style="text-align:right;">
-38.95
+38.71
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chla
+</td>
+<td style="text-align:left;">
+Current dataset, no 0.001 or 0.999
+</td>
+<td style="text-align:right;">
+21.85
+</td>
+<td style="text-align:right;">
+35.06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chla
+</td>
+<td style="text-align:left;">
+Current dataset, no secchi
+</td>
+<td style="text-align:right;">
+15.20
+</td>
+<td style="text-align:right;">
+30.39
 </td>
 </tr>
 <tr>
@@ -369,10 +409,24 @@ chla
 Strict dataset
 </td>
 <td style="text-align:right;">
-18.95
+18.83
 </td>
 <td style="text-align:right;">
-32.43
+32.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chla
+</td>
+<td style="text-align:left;">
+Strict dataset, no secchi
+</td>
+<td style="text-align:right;">
+14.54
+</td>
+<td style="text-align:right;">
+28.94
 </td>
 </tr>
 <tr>
@@ -383,10 +437,38 @@ doc
 Current dataset
 </td>
 <td style="text-align:right;">
-11.02
+11.03
 </td>
 <td style="text-align:right;">
 9.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doc
+</td>
+<td style="text-align:left;">
+Current dataset, no 0.001 or 0.999
+</td>
+<td style="text-align:right;">
+10.94
+</td>
+<td style="text-align:right;">
+8.89
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doc
+</td>
+<td style="text-align:left;">
+Current dataset, no secchi
+</td>
+<td style="text-align:right;">
+7.65
+</td>
+<td style="text-align:right;">
+7.53
 </td>
 </tr>
 <tr>
@@ -411,10 +493,24 @@ doc
 Strict dataset
 </td>
 <td style="text-align:right;">
-10.54
+10.67
 </td>
 <td style="text-align:right;">
-8.89
+8.95
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doc
+</td>
+<td style="text-align:left;">
+Strict dataset, no secchi
+</td>
+<td style="text-align:right;">
+8.54
+</td>
+<td style="text-align:right;">
+7.78
 </td>
 </tr>
 <tr>
@@ -428,7 +524,21 @@ Current dataset
 0.92
 </td>
 <td style="text-align:right;">
-0.86
+0.85
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+secchi
+</td>
+<td style="text-align:left;">
+Current dataset, no 0.001 or 0.999
+</td>
+<td style="text-align:right;">
+0.92
+</td>
+<td style="text-align:right;">
+0.85
 </td>
 </tr>
 <tr>
@@ -467,10 +577,38 @@ tss
 Current dataset
 </td>
 <td style="text-align:right;">
-20.80
+21.33
 </td>
 <td style="text-align:right;">
-32.08
+33.84
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tss
+</td>
+<td style="text-align:left;">
+Current dataset, no 0.001 or 0.999
+</td>
+<td style="text-align:right;">
+21.37
+</td>
+<td style="text-align:right;">
+33.60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tss
+</td>
+<td style="text-align:left;">
+Current dataset, no secchi
+</td>
+<td style="text-align:right;">
+23.28
+</td>
+<td style="text-align:right;">
+50.58
 </td>
 </tr>
 <tr>
@@ -495,10 +633,24 @@ tss
 Strict dataset
 </td>
 <td style="text-align:right;">
-19.62
+19.43
 </td>
 <td style="text-align:right;">
-31.68
+31.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tss
+</td>
+<td style="text-align:left;">
+Strict dataset, no secchi
+</td>
+<td style="text-align:right;">
+20.00
+</td>
+<td style="text-align:right;">
+44.13
 </td>
 </tr>
 </tbody>
@@ -507,23 +659,33 @@ Strict dataset
 </div>
 <div id="modeling" class="section level3 hasAnchor" number="8.0.3">
 <h3><span class="header-section-number">8.0.3</span> Modeling<a href="light-partitioning-modeling-report.html#modeling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We’ll run the linear model with all three versions of the dataset. The
-code below is adapted from MR’s scripts.</p>
+<p>We’ll run the linear model with all versions of the dataset. The code
+below is adapted from MR’s scripts.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="light-partitioning-modeling-report.html#cb10-1" aria-hidden="true" tabindex="-1"></a>range_val <span class="ot">&lt;-</span> <span class="dv">234</span></span>
 <span id="cb10-2"><a href="light-partitioning-modeling-report.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="light-partitioning-modeling-report.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiply chla by 234</span></span>
 <span id="cb10-4"><a href="light-partitioning-modeling-report.html#cb10-4" aria-hidden="true" tabindex="-1"></a>nap_test <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x =</span> <span class="fu">list</span>(<span class="at">simul =</span> <span class="fu">rename</span>(simul, <span class="at">chla =</span> chl_a),</span>
 <span id="cb10-5"><a href="light-partitioning-modeling-report.html#cb10-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">simultaneous_data =</span> simultaneous_data,</span>
-<span id="cb10-6"><a href="light-partitioning-modeling-report.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">simultaneous_data_strict =</span> simultaneous_data_strict),</span>
-<span id="cb10-7"><a href="light-partitioning-modeling-report.html#cb10-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">expand_grid</span>(.x, <span class="at">chl_ratio =</span> range_val) <span class="sc">%&gt;%</span></span>
-<span id="cb10-8"><a href="light-partitioning-modeling-report.html#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">mutate</span>(<span class="at">power =</span> <span class="fu">ifelse</span>(chl_ratio <span class="sc">==</span> <span class="dv">234</span>, <span class="fl">0.57</span>, <span class="dv">1</span>),</span>
-<span id="cb10-9"><a href="light-partitioning-modeling-report.html#cb10-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chla_biomass =</span> <span class="fu">exp</span>(<span class="fu">log</span>(chl_ratio <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">+</span> <span class="fu">log</span>(chla) <span class="sc">*</span> power),</span>
-<span id="cb10-10"><a href="light-partitioning-modeling-report.html#cb10-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">tss_dead =</span> tss <span class="sc">-</span> chla_biomass))</span></code></pre></div>
+<span id="cb10-6"><a href="light-partitioning-modeling-report.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">simultaneous_data_middle =</span> simultaneous_data_middle,</span>
+<span id="cb10-7"><a href="light-partitioning-modeling-report.html#cb10-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">simultaneous_data_strict =</span> simultaneous_data_strict),</span>
+<span id="cb10-8"><a href="light-partitioning-modeling-report.html#cb10-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">expand_grid</span>(.x, <span class="at">chl_ratio =</span> range_val) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="light-partitioning-modeling-report.html#cb10-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">mutate</span>(<span class="at">power =</span> <span class="fu">ifelse</span>(chl_ratio <span class="sc">==</span> <span class="dv">234</span>, <span class="fl">0.57</span>, <span class="dv">1</span>),</span>
+<span id="cb10-10"><a href="light-partitioning-modeling-report.html#cb10-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chla_biomass =</span> <span class="fu">exp</span>(<span class="fu">log</span>(chl_ratio <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">+</span> <span class="fu">log</span>(chla) <span class="sc">*</span> power),</span>
+<span id="cb10-11"><a href="light-partitioning-modeling-report.html#cb10-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">tss_dead =</span> tss <span class="sc">-</span> chla_biomass))</span></code></pre></div>
 </details>
-<pre><code>## Warning in log(chla): NaNs produced
-
-## Warning in log(chla): NaNs produced</code></pre>
+<pre><code>## Warning: [1m[22mThere was 1 warning in `mutate()`.
+## [1m[22m[36mℹ[39m In argument: `chla_biomass = exp(log(chl_ratio/1000) + log(chla) * power)`.
+## Caused by warning in `log()`:
+## [33m![39m NaNs produced
+## [1m[22mThere was 1 warning in `mutate()`.
+## [1m[22m[36mℹ[39m In argument: `chla_biomass = exp(log(chl_ratio/1000) + log(chla) * power)`.
+## Caused by warning in `log()`:
+## [33m![39m NaNs produced
+## [1m[22mThere was 1 warning in `mutate()`.
+## [1m[22m[36mℹ[39m In argument: `chla_biomass = exp(log(chl_ratio/1000) + log(chla) * power)`.
+## Caused by warning in `log()`:
+## [33m![39m NaNs produced</code></pre>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="light-partitioning-modeling-report.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> nap_test,</span>
 <span id="cb12-2"><a href="light-partitioning-modeling-report.html#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> <span class="sc">~</span> .x <span class="sc">%&gt;%</span></span>
@@ -540,16 +702,26 @@ code below is adapted from MR’s scripts.</p>
 <span id="cb12-13"><a href="light-partitioning-modeling-report.html#cb12-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;seagreen3&#39;</span>,<span class="st">&#39;skyblue3&#39;</span>,<span class="st">&#39;saddlebrown&#39;</span>)))</span></code></pre></div>
 </details>
 <pre><code>## $simul</code></pre>
-<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 <pre><code>## 
 ## $simultaneous_data
 
 ## Warning: [1m[22mTransformation introduced infinite values in continuous x-axis
 ## [1m[22mTransformation introduced infinite values in continuous x-axis
 
-## Warning: [1m[22mRemoved 132 rows containing non-finite values
+## Warning: [1m[22mRemoved 133 rows containing non-finite values
 ## (`stat_poly_eq()`).</code></pre>
-<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-11-2.png" /><!-- --></p>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-14-2.png" /><!-- --></p>
+<pre><code>## 
+## $simultaneous_data_middle
+
+## Warning: [1m[22mTransformation introduced infinite values in continuous x-axis
+
+## Warning: [1m[22mTransformation introduced infinite values in continuous x-axis
+
+## Warning: [1m[22mRemoved 131 rows containing non-finite values
+## (`stat_poly_eq()`).</code></pre>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-14-3.png" /><!-- --></p>
 <pre><code>## 
 ## $simultaneous_data_strict
 
@@ -557,46 +729,51 @@ code below is adapted from MR’s scripts.</p>
 
 ## Warning: [1m[22mTransformation introduced infinite values in continuous x-axis
 
-## Warning: [1m[22mRemoved 18 rows containing non-finite values (`stat_poly_eq()`).</code></pre>
-<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-11-3.png" /><!-- --></p>
+## Warning: [1m[22mRemoved 18 rows containing non-finite values
+## (`stat_poly_eq()`).</code></pre>
+<p><img src="chapters/07_modeling_report_files/figure-gfm/unnamed-chunk-14-4.png" /><!-- --></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="light-partitioning-modeling-report.html#cb16-1" aria-hidden="true" tabindex="-1"></a>nap_est <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x =</span> nap_test,</span>
-<span id="cb16-2"><a href="light-partitioning-modeling-report.html#cb16-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">.f =</span> <span class="sc">~</span> .x <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="light-partitioning-modeling-report.html#cb16-3" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">filter</span>(tss_dead <span class="sc">&gt;</span> <span class="fl">0.001</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-4"><a href="light-partitioning-modeling-report.html#cb16-4" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">mutate</span>(<span class="at">secchi =</span> <span class="fu">ifelse</span>(secchi <span class="sc">&lt;</span> <span class="fl">0.01</span>, <span class="fl">0.01</span>, secchi),</span>
-<span id="cb16-5"><a href="light-partitioning-modeling-report.html#cb16-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">kd =</span> (<span class="dv">1</span> <span class="sc">/</span> secchi)))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="light-partitioning-modeling-report.html#cb17-1" aria-hidden="true" tabindex="-1"></a>nap_est <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x =</span> nap_test,</span>
+<span id="cb17-2"><a href="light-partitioning-modeling-report.html#cb17-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">.f =</span> <span class="sc">~</span> .x <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="light-partitioning-modeling-report.html#cb17-3" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">filter</span>(tss_dead <span class="sc">&gt;</span> <span class="fl">0.001</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="light-partitioning-modeling-report.html#cb17-4" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">mutate</span>(<span class="at">secchi =</span> <span class="fu">ifelse</span>(secchi <span class="sc">&lt;</span> <span class="fl">0.01</span>, <span class="fl">0.01</span>, secchi),</span>
+<span id="cb17-5"><a href="light-partitioning-modeling-report.html#cb17-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">kd =</span> (<span class="dv">1</span> <span class="sc">/</span> secchi)))</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="light-partitioning-modeling-report.html#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x =</span> nap_est,</span>
-<span id="cb17-2"><a href="light-partitioning-modeling-report.html#cb17-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">lm</span>(kd <span class="sc">~</span> tss_dead <span class="sc">+</span> doc <span class="sc">+</span> chla, <span class="at">data =</span> .x))</span>
-<span id="cb17-3"><a href="light-partitioning-modeling-report.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="light-partitioning-modeling-report.html#cb17-4" aria-hidden="true" tabindex="-1"></a>nap_resid <span class="ot">&lt;-</span> <span class="fu">map2</span>(<span class="at">.x =</span> nap_est,</span>
-<span id="cb17-5"><a href="light-partitioning-modeling-report.html#cb17-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.y =</span> model,</span>
-<span id="cb17-6"><a href="light-partitioning-modeling-report.html#cb17-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.f =</span> <span class="sc">~</span> .x <span class="sc">%&gt;%</span></span>
-<span id="cb17-7"><a href="light-partitioning-modeling-report.html#cb17-7" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">mutate</span>(<span class="at">residuals =</span> .y<span class="sc">$</span>residuals,</span>
-<span id="cb17-8"><a href="light-partitioning-modeling-report.html#cb17-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">pred =</span> .y<span class="sc">$</span>fitted.values))</span>
-<span id="cb17-9"><a href="light-partitioning-modeling-report.html#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-10"><a href="light-partitioning-modeling-report.html#cb17-10" aria-hidden="true" tabindex="-1"></a>model_metrics <span class="ot">&lt;-</span> <span class="fu">pmap_df</span>(<span class="at">.l =</span> <span class="fu">list</span>(<span class="at">nap_resid =</span> nap_resid,</span>
-<span id="cb17-11"><a href="light-partitioning-modeling-report.html#cb17-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">name =</span> <span class="fu">names</span>(nap_resid),</span>
-<span id="cb17-12"><a href="light-partitioning-modeling-report.html#cb17-12" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">model =</span> model),</span>
-<span id="cb17-13"><a href="light-partitioning-modeling-report.html#cb17-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">.f =</span> <span class="cf">function</span>(nap_resid, name, model){</span>
-<span id="cb17-14"><a href="light-partitioning-modeling-report.html#cb17-14" aria-hidden="true" tabindex="-1"></a>                           dataset <span class="ot">&lt;-</span> name</span>
-<span id="cb17-15"><a href="light-partitioning-modeling-report.html#cb17-15" aria-hidden="true" tabindex="-1"></a>                           rmse <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rmse</span>(nap_resid<span class="sc">$</span>kd, nap_resid<span class="sc">$</span>pred), <span class="dv">2</span>)</span>
-<span id="cb17-16"><a href="light-partitioning-modeling-report.html#cb17-16" aria-hidden="true" tabindex="-1"></a>                           adj_rsq <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">unlist</span>(<span class="fu">summary</span>(model)[<span class="st">&quot;adj.r.squared&quot;</span>][<span class="dv">1</span>]), <span class="dv">2</span>)</span>
-<span id="cb17-17"><a href="light-partitioning-modeling-report.html#cb17-17" aria-hidden="true" tabindex="-1"></a>                           </span>
-<span id="cb17-18"><a href="light-partitioning-modeling-report.html#cb17-18" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">tibble</span>(<span class="at">dataset =</span> dataset,</span>
-<span id="cb17-19"><a href="light-partitioning-modeling-report.html#cb17-19" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rmse =</span> rmse,</span>
-<span id="cb17-20"><a href="light-partitioning-modeling-report.html#cb17-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">adj_rsq =</span> adj_rsq)</span>
-<span id="cb17-21"><a href="light-partitioning-modeling-report.html#cb17-21" aria-hidden="true" tabindex="-1"></a>                         })</span>
-<span id="cb17-22"><a href="light-partitioning-modeling-report.html#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="light-partitioning-modeling-report.html#cb17-23" aria-hidden="true" tabindex="-1"></a>model_metrics <span class="sc">%&gt;%</span></span>
-<span id="cb17-24"><a href="light-partitioning-modeling-report.html#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> .,</span>
-<span id="cb17-25"><a href="light-partitioning-modeling-report.html#cb17-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">tibble</span>(</span>
-<span id="cb17-26"><a href="light-partitioning-modeling-report.html#cb17-26" aria-hidden="true" tabindex="-1"></a>              <span class="at">dataset =</span> <span class="fu">c</span>(<span class="st">&quot;simul&quot;</span>, <span class="st">&quot;simultaneous_data&quot;</span>, <span class="st">&quot;simultaneous_data_strict&quot;</span>),</span>
-<span id="cb17-27"><a href="light-partitioning-modeling-report.html#cb17-27" aria-hidden="true" tabindex="-1"></a>              <span class="at">rows =</span> <span class="fu">c</span>(<span class="fu">nrow</span>(simul), <span class="fu">nrow</span>(simultaneous_data), <span class="fu">nrow</span>(simultaneous_data_strict))),</span>
-<span id="cb17-28"><a href="light-partitioning-modeling-report.html#cb17-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;dataset&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-29"><a href="light-partitioning-modeling-report.html#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb17-30"><a href="light-partitioning-modeling-report.html#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_paper</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="light-partitioning-modeling-report.html#cb18-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x =</span> nap_est,</span>
+<span id="cb18-2"><a href="light-partitioning-modeling-report.html#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">lm</span>(kd <span class="sc">~</span> tss_dead <span class="sc">+</span> doc <span class="sc">+</span> chla, <span class="at">data =</span> .x))</span>
+<span id="cb18-3"><a href="light-partitioning-modeling-report.html#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="light-partitioning-modeling-report.html#cb18-4" aria-hidden="true" tabindex="-1"></a>nap_resid <span class="ot">&lt;-</span> <span class="fu">map2</span>(<span class="at">.x =</span> nap_est,</span>
+<span id="cb18-5"><a href="light-partitioning-modeling-report.html#cb18-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.y =</span> model,</span>
+<span id="cb18-6"><a href="light-partitioning-modeling-report.html#cb18-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.f =</span> <span class="sc">~</span> .x <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="light-partitioning-modeling-report.html#cb18-7" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">mutate</span>(<span class="at">residuals =</span> .y<span class="sc">$</span>residuals,</span>
+<span id="cb18-8"><a href="light-partitioning-modeling-report.html#cb18-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">pred =</span> .y<span class="sc">$</span>fitted.values))</span>
+<span id="cb18-9"><a href="light-partitioning-modeling-report.html#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="light-partitioning-modeling-report.html#cb18-10" aria-hidden="true" tabindex="-1"></a>model_metrics <span class="ot">&lt;-</span> <span class="fu">pmap_df</span>(<span class="at">.l =</span> <span class="fu">list</span>(<span class="at">nap_resid =</span> nap_resid,</span>
+<span id="cb18-11"><a href="light-partitioning-modeling-report.html#cb18-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">name =</span> <span class="fu">names</span>(nap_resid),</span>
+<span id="cb18-12"><a href="light-partitioning-modeling-report.html#cb18-12" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">model =</span> model),</span>
+<span id="cb18-13"><a href="light-partitioning-modeling-report.html#cb18-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">.f =</span> <span class="cf">function</span>(nap_resid, name, model){</span>
+<span id="cb18-14"><a href="light-partitioning-modeling-report.html#cb18-14" aria-hidden="true" tabindex="-1"></a>                           dataset <span class="ot">&lt;-</span> name</span>
+<span id="cb18-15"><a href="light-partitioning-modeling-report.html#cb18-15" aria-hidden="true" tabindex="-1"></a>                           rmse <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rmse</span>(nap_resid<span class="sc">$</span>kd, nap_resid<span class="sc">$</span>pred), <span class="dv">2</span>)</span>
+<span id="cb18-16"><a href="light-partitioning-modeling-report.html#cb18-16" aria-hidden="true" tabindex="-1"></a>                           adj_rsq <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">unlist</span>(<span class="fu">summary</span>(model)[<span class="st">&quot;adj.r.squared&quot;</span>][<span class="dv">1</span>]), <span class="dv">2</span>)</span>
+<span id="cb18-17"><a href="light-partitioning-modeling-report.html#cb18-17" aria-hidden="true" tabindex="-1"></a>                           </span>
+<span id="cb18-18"><a href="light-partitioning-modeling-report.html#cb18-18" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">tibble</span>(<span class="at">dataset =</span> dataset,</span>
+<span id="cb18-19"><a href="light-partitioning-modeling-report.html#cb18-19" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rmse =</span> rmse,</span>
+<span id="cb18-20"><a href="light-partitioning-modeling-report.html#cb18-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">adj_rsq =</span> adj_rsq)</span>
+<span id="cb18-21"><a href="light-partitioning-modeling-report.html#cb18-21" aria-hidden="true" tabindex="-1"></a>                         })</span>
+<span id="cb18-22"><a href="light-partitioning-modeling-report.html#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="light-partitioning-modeling-report.html#cb18-23" aria-hidden="true" tabindex="-1"></a>model_metrics <span class="sc">%&gt;%</span></span>
+<span id="cb18-24"><a href="light-partitioning-modeling-report.html#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> .,</span>
+<span id="cb18-25"><a href="light-partitioning-modeling-report.html#cb18-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-26"><a href="light-partitioning-modeling-report.html#cb18-26" aria-hidden="true" tabindex="-1"></a>              <span class="at">dataset =</span> <span class="fu">c</span>(<span class="st">&quot;simul&quot;</span>, <span class="st">&quot;simultaneous_data&quot;</span>, <span class="st">&quot;simultaneous_data_no_sdd&quot;</span>,</span>
+<span id="cb18-27"><a href="light-partitioning-modeling-report.html#cb18-27" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;simultaneous_data_middle&quot;</span>, <span class="st">&quot;simultaneous_data_strict&quot;</span>,</span>
+<span id="cb18-28"><a href="light-partitioning-modeling-report.html#cb18-28" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;simultaneous_data_strict_no_sdd&quot;</span>),</span>
+<span id="cb18-29"><a href="light-partitioning-modeling-report.html#cb18-29" aria-hidden="true" tabindex="-1"></a>              <span class="at">rows =</span> <span class="fu">c</span>(<span class="fu">nrow</span>(simul), <span class="fu">nrow</span>(simultaneous_data), <span class="fu">nrow</span>(simultaneous_data_no_sdd),</span>
+<span id="cb18-30"><a href="light-partitioning-modeling-report.html#cb18-30" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">nrow</span>(simultaneous_data_middle), <span class="fu">nrow</span>(simultaneous_data_strict),</span>
+<span id="cb18-31"><a href="light-partitioning-modeling-report.html#cb18-31" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">nrow</span>(simultaneous_data_strict_no_sdd))),</span>
+<span id="cb18-32"><a href="light-partitioning-modeling-report.html#cb18-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;dataset&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-33"><a href="light-partitioning-modeling-report.html#cb18-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-34"><a href="light-partitioning-modeling-report.html#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_paper</span>()</span></code></pre></div>
 </details>
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
@@ -635,13 +812,27 @@ simul
 simultaneous_data
 </td>
 <td style="text-align:right;">
-1.85
+1.84
 </td>
 <td style="text-align:right;">
 0.23
 </td>
 <td style="text-align:right;">
-55675
+56653
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+simultaneous_data_middle
+</td>
+<td style="text-align:right;">
+1.83
+</td>
+<td style="text-align:right;">
+0.23
+</td>
+<td style="text-align:right;">
+56255
 </td>
 </tr>
 <tr>
@@ -655,7 +846,7 @@ simultaneous_data_strict
 0.36
 </td>
 <td style="text-align:right;">
-25588
+26141
 </td>
 </tr>
 </tbody>

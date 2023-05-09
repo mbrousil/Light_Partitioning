@@ -14,7 +14,9 @@ source("3_harmonize/src/harmonize_tss_strict.R")
 source("3_harmonize/src/harmonize_chla_strict.R")
 source("3_harmonize/src/harmonize_doc_strict.R")
 source("3_harmonize/src/find_simultaneous.R")
+source("3_harmonize/src/find_simultaneous_no_sdd.R")
 source("3_harmonize/src/change_ext.R")
+source("3_harmonize/src/export_feather.R")
 
 
 p3_targets_list <- list(
@@ -64,7 +66,8 @@ p3_targets_list <- list(
   tar_target(cleaned_wqp_data_strict,
              read_feather(wqp_data_aoi_ready_strict$wqp_data_clean_path),
              packages = "feather",
-             format = "feather"),
+             format = "feather",
+             cue = tar_cue("always")),
   
   # Get parameter codes for use in cleaning processes
   tar_target(
@@ -190,7 +193,26 @@ p3_targets_list <- list(
                                sdd_path = harmonized_sdd,
                                tss_path = harmonized_tss,
                                wqp_metadata = p1_wqp_inventory_aoi),
-             packages = c("tidyverse", "lubridate", "feather")),
+             packages = c("tidyverse", "lubridate", "feather"),
+             cue = tar_cue("always")),
+  
+  tar_target(simultaneous_data_no_sdd,
+             find_simultaneous_no_sdd(chla_path = harmonized_chla,
+                                      doc_path = harmonized_doc,
+                                      tss_path = harmonized_tss,
+                                      wqp_metadata = p1_wqp_inventory_aoi),
+             packages = c("tidyverse", "lubridate", "feather"),
+             cue = tar_cue("always")),
+  
+  tar_target(simultaneous_data_middle,
+             find_simultaneous(chla_path = harmonized_chla,
+                               doc_path = harmonized_doc,
+                               sdd_path = harmonized_sdd,
+                               tss_path = harmonized_tss,
+                               wqp_metadata = p1_wqp_inventory_aoi,
+                               middle_only = TRUE),
+             packages = c("tidyverse", "lubridate", "feather"),
+             cue = tar_cue("always")),
   
   tar_target(simultaneous_data_strict,
              find_simultaneous(chla_path = harmonized_chla_strict$harmonized_chla_path,
@@ -198,7 +220,18 @@ p3_targets_list <- list(
                                sdd_path = harmonized_sdd_strict$harmonized_sdd_path,
                                tss_path = harmonized_tss_strict$harmonized_tss_path,
                                wqp_metadata = p1_wqp_inventory_aoi),
-             packages = c("tidyverse", "lubridate", "feather")),
+             packages = c("tidyverse", "lubridate", "feather"),
+             cue = tar_cue("always")),
+  
+  # Strict simultaneous, so secchi
+  tar_target(simultaneous_data_strict_no_sdd,
+             find_simultaneous_no_sdd(chla_path = harmonized_chla_strict$harmonized_chla_path,
+                                      doc_path = harmonized_doc_strict$harmonized_doc_path,
+                                      tss_path = harmonized_tss_strict$harmonized_tss_path,
+                                      wqp_metadata = p1_wqp_inventory_aoi),
+             packages = c("tidyverse", "lubridate", "feather"),
+             cue = tar_cue("always")),
+  
   
   # A target using the harmonized outputs to prepare a dataset for the later
   # analysis steps
@@ -213,7 +246,37 @@ p3_targets_list <- list(
                                harmonized_parameter = parameter, orig_parameter,
                                analytical_method))
              },
-             packages = c("tidyverse", "feather"))
+             packages = c("tidyverse", "feather")),
+  
+  
+  # Export simultaneous -----------------------------------------------------
+  
+  # Export simultaneous datasets as .feather  
+  
+  tar_file(simultaneous_data_out,
+           export_feather(target = simultaneous_data,
+                          folder = "3_harmonize/out/"),
+           packages = c("tidyverse", "feather")),
+  
+  tar_file(simultaneous_data_no_sdd_out,
+           export_feather(target = simultaneous_data_no_sdd,
+                          folder = "3_harmonize/out/"),
+           packages = c("tidyverse", "feather")),
+  
+  tar_file(simultaneous_data_middle_out,
+           export_feather(target = simultaneous_data_middle,
+                          folder = "3_harmonize/out/"),
+           packages = c("tidyverse", "feather")),
+  
+  tar_file(simultaneous_data_strict_out,
+           export_feather(target = simultaneous_data_strict,
+                          folder = "3_harmonize/out/"),
+           packages = c("tidyverse", "feather")),
+  
+  tar_file(simultaneous_data_strict_no_sdd_out,
+           export_feather(target = simultaneous_data_strict_no_sdd,
+                          folder = "3_harmonize/out/"),
+           packages = c("tidyverse", "feather"))
   
 )
 

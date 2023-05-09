@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2023-04-02" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,22 +225,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="initial-dataset" class="section level3 hasAnchor" number="3.0.1">
 <h3><span class="header-section-number">3.0.1</span> 0. Initial dataset<a href="pre-harmonization-decision-process.html#initial-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>At the start of the preharmonization process the WQP dataset contains
-15.07 million rows.</p>
+16.92 million rows.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
 <p><br></p>
 </div>
 <div id="remove-duplicates" class="section level3 hasAnchor" number="3.0.2">
 <h3><span class="header-section-number">3.0.2</span> 1. Remove duplicates<a href="pre-harmonization-decision-process.html#remove-duplicates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The first filtering step is to remove any duplicated records present in
-the dataset. This results in dropping 3.02 million rows for a record
-count of 12.06 million.</p>
+the dataset. This results in dropping 3.72 million rows for a record
+count of 13.2 million.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
 <p><br></p>
 </div>
 <div id="missing-results" class="section level3 hasAnchor" number="3.0.3">
 <h3><span class="header-section-number">3.0.3</span> 2. Missing results<a href="pre-harmonization-decision-process.html#missing-results" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Next missing results are dropped from the dataset. 499.56 thousand rows
-are dropped, resulting in a final count of 11.56 million.</p>
+<p>Next missing results are dropped from the dataset. 503.58 thousand rows
+are dropped, resulting in a final count of 12.69 million.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -256,7 +256,7 @@ following statuses:</p>
 <li><code>"Preliminary"</code></li>
 <li><code>NA</code></li>
 </ul>
-<p>43.53 thousand rows are dropped from the dataset leaving it with 11.51
+<p>44.8 thousand rows are dropped from the dataset leaving it with 12.65
 million remaining.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <p><br></p>
@@ -271,7 +271,7 @@ the following media:</p>
 <li><code>"Estuary"</code></li>
 <li><code>NA</code></li>
 </ul>
-<p>24.29 thousand rows are dropped and 11.49 million remain.</p>
+<p>25.12 thousand rows are dropped and 12.62 million remain.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
 <p><br></p>
 <div id="location-type" class="section level4 hasAnchor" number="3.0.5.1">
@@ -279,8 +279,8 @@ the following media:</p>
 <p>The final step in pre-harmonization is filtering out any
 <code>ResolvedMonitoringLocationTypeName</code> that is not <code>"Estuary"</code>,
 <code>"Lake, Reservoir, Impoundment"</code>, or <code>"Stream"</code>.</p>
-<p>After dropping 124.4 thousand rows the pre-harmonization dataset is
-complete with 11.36 million.</p>
+<p>After dropping 146.06 thousand rows the pre-harmonization dataset is
+complete with 12.48 million.</p>
 <p><img src="chapters/02_preharmonization_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 
 </div>

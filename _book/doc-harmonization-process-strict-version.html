@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2023-04-02" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="initial-dataset-2" class="section level3 hasAnchor" number="5.0.1">
 <h3><span class="header-section-number">5.0.1</span> 0. Initial dataset<a href="doc-harmonization-process-strict-version.html#initial-dataset-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>After the preharmonization process the DOC-only WQP dataset contains
-2.15 million rows.</p>
+2.16 million rows.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -233,7 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">5.0.2</span> 1. Filter for water media<a href="doc-harmonization-process-strict-version.html#filter-for-water-media-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The first step in DOC harmonization is to ensure that the media type for
 the data is <code>"water"</code> or <code>"Water"</code>. This should just be a precautionary
-step: 0 rows are removed. The final row count after this is 2.15
+step: 0 rows are removed. The final row count after this is 2.16
 million.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
 <p><br></p>
@@ -249,7 +249,7 @@ dropped record includes (but is not limited to): <code>"fail"</code>, <code>"sus
 <code>"error"</code>, <code>"beyond accept"</code>, <code>"interference"</code>, <code>"questionable"</code>,
 <code>"problem"</code>, <code>"violation"</code>, <code>"rejected"</code>, <code>"no data"</code>. Specific target
 text varies by column.</p>
-<p>72.25 thousand rows are removed and 2.08 million rows remain.</p>
+<p>72.34 thousand rows are removed and 2.09 million rows remain.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -269,7 +269,7 @@ column we use that number instead.</p>
 <p>We then use a random number between 0 and <code>0.5 * MDL</code> as the record’s
 value moving forward.</p>
 <p>This should not result in a change in rows but we still check: 0 rows
-are removed. The final row count after this is 2.08 million.</p>
+are removed. The final row count after this is 2.09 million.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -287,7 +287,7 @@ ignoring case: <code>"result approx|RESULT IS APPROX|value approx"</code></li>
 </ol>
 <p>We then use the approximate value as the record’s value moving forward.</p>
 <p>This should not result in a change in rows but we still check: 0 rows
-are removed. The final row count after this is 2.08 million.</p>
+are removed. The final row count after this is 2.09 million.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -408,7 +408,7 @@ umol/L
 </tbody>
 </table>
 <p>We also limit values to less than 50 mg/L to ensure realistic data.
-47.11 thousand rows are removed. The final row count after this is 2.03
+47.35 thousand rows are removed. The final row count after this is 2.04
 million.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-15-1.png" /><!-- --></p>
 <p><br></p>
@@ -419,7 +419,7 @@ million.</p>
 then filter out methods that may have been erroneously added, were
 unclear, or which don’t meet our needs. Methods that were <code>NA</code> or were
 grouped as <code>"Ambiguous"</code> or <code>"Carbonaceous Analyzer"</code> are dropped.</p>
-<p>This process drops 1032.73 million rows leaving 1 million remaining.</p>
+<p>This process drops 1033.55 million rows leaving 1.01 million remaining.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
 <p><br></p>
 </div>
@@ -429,7 +429,7 @@ grouped as <code>"Ambiguous"</code> or <code>"Carbonaceous Analyzer"</code> are 
 <code>ResultSampleFractionText</code> column. We keep records with the following
 values in this column: <code>"Dissolved"</code>, <code>"Filtered, lab"</code>, <code>"Filterable"</code>,
 <code>"Filtered, field"</code>.</p>
-<p>This process drops 657.28 thousand rows leaving 0.34 million remaining
+<p>This process drops 666.66 thousand rows leaving 0.34 million remaining
 in the final harmonized doc dataset.</p>
 <p><img src="chapters/04_doc_harmonization_files/figure-gfm/unnamed-chunk-19-1.png" /><!-- --></p>
 

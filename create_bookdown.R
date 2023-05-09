@@ -121,10 +121,14 @@ bookdown_targets_list <- list(
       params = list(
         simul = simul,
         simultaneous_data = simultaneous_data,
+        simultaneous_data_no_sdd = simultaneous_data_no_sdd,
         simultaneous_data_strict = simultaneous_data_strict,
+        simultaneous_data_strict_no_sdd = simultaneous_data_strict_no_sdd,
+        simultaneous_data_middle = simultaneous_data_middle,
         simul_vis_gg_mr = simul_vis_gg_mr,
         simul_vis_gg = simul_vis_gg,
-        simul_vis_gg_strict = simul_vis_gg_strict),
+        simul_vis_gg_strict = simul_vis_gg_strict
+      ),
       output_file = "07_modeling_report",
       output_dir = 'chapters') %>%
       change_ext(inext = 'md', outext = 'Rmd'),
